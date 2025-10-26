@@ -213,6 +213,14 @@ def http_post(url: str, data: dict, headers: dict) -> Tuple[int, bytes]:
         return resp.getcode(), resp.read()
 
 
+class FetchError(Exception):
+    """Raised when fetching HTML for a transaction fails."""
+
+
+class ParseError(Exception):
+    """Raised when parsing HTML into fields fails."""
+
+
 def extract_avatar_and_name(td_html: str) -> Tuple[Optional[str], Optional[str], Optional[str]]:
     img_tag_m = IMG_TAG_RE.search(td_html)
     username = None
@@ -248,7 +256,7 @@ def extract_fields_from_html(html: str) -> Optional[Dict]:
         fields[key] = val_html
 
     if '交易哈希' not in fields and 'Transaction Hash' not in fields:
-        return None
+        raise ParseError('transaction hash not found in HTML')
 
     tx_hash_html = fields.get('交易哈希') or fields.get('Transaction Hash')
     tx_hash = re.sub(r'<[^>]+>', '', tx_hash_html).strip()
@@ -314,13 +322,20 @@ class TX2JSON:
         post_url = f'{self.base_url}/solana/tx'
         try:
             code, body = http_post(post_url, {'tx': tx}, headers)
-            if code == 200 and body:
-                html = body.decode('utf-8', errors='ignore')
-                if '接收方' in html or 'Receiver' in html:
-                    return html
-        except Exception:
-            return None
-        return None
+        except Exception as e:
+            raise FetchError(f'error fetching tx HTML: {e}')
+
+        if code != 200:
+            raise FetchError(f'non-200 response code: {code}')
+
+        if not body:
+            raise FetchError('empty response body')
+
+        html = body.decode('utf-8', errors='ignore')
+        if '接收方' in html or 'Receiver' in html:
+            return html
+        raise FetchError('response did not contain expected transaction HTML')
+        
 
     def parse(self, tx: str) -> Optional[Dict]:
         html = self.fetch_html_for_tx(tx)
