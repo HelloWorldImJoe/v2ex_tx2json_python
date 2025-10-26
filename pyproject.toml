@@ -10,10 +10,25 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [{name = "Joe", email = "sdauwangzh@gmail.com"}]
+keywords = ["v2ex", "solana", "transaction", "parser", "json"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
 
 dependencies = [
     "python-dotenv>=1.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/HelloWorldImJoe/v2ex_tx2json"
+Homepage = "https://github.com/HelloWorldImJoe/v2ex_tx2json_python"
+Repository = "https://github.com/HelloWorldImJoe/v2ex_tx2json_python"
+Issues = "https://github.com/HelloWorldImJoe/v2ex_tx2json_python/issues"
