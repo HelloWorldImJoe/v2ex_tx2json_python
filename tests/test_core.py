@@ -48,3 +48,19 @@ def test_tx2json_parse_monkeypatch(monkeypatch):
     info = client.parse('dummy_tx')
     assert info is not None
     assert info['tx_hash'] == 'abcd1234'
+
+
+def test_extract_fields_topic_id():
+        html = '''
+        <table>
+            <tr><td>交易哈希</td><td><code><a>abcd1234</a></code></td></tr>
+            <tr><td>发送方</td><td><img src="https://example.com/avatar.png" alt="alice" data-uid="1001" /> Alice</td></tr>
+            <tr><td>接收方</td><td><img src="https://example.com/avatar2.png" alt="bob" data-uid="1002" /> Bob</td></tr>
+            <tr><td>附言（只对发送者或者接收者可见）</td><td>see topic: 98765 for details</td></tr>
+        </table>
+        '''
+
+        info = extract_fields_from_html(html)
+        assert info is not None
+        assert info['memo'] == 'see topic: 98765 for details'
+        assert info['topic_id'] == 98765

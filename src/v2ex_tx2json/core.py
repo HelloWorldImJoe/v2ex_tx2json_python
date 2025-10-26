@@ -108,6 +108,15 @@ def extract_fields_from_html(html: str) -> Optional[Dict]:
                 amount_value = float(m.group(1))
             except Exception:
                 amount_value = None
+    # extract topic id from memo like 'topic:12345' (case-insensitive)
+    topic_id = None
+    if memo:
+        t = re.search(r'topic\s*[:\-]?\s*(\d+)', memo, re.I)
+        if t:
+            try:
+                topic_id = int(t.group(1))
+            except Exception:
+                topic_id = None
 
     return {
         'tx_hash': tx_hash,
@@ -127,6 +136,7 @@ def extract_fields_from_html(html: str) -> Optional[Dict]:
         'amount_value': amount_value,
         'time': send_time,
         'memo': memo,
+        'topic_id': topic_id,
     }
 
 
@@ -281,6 +291,15 @@ def extract_fields_from_html(html: str) -> Optional[Dict]:
                 amount_value = float(m.group(1))
             except Exception:
                 amount_value = None
+    # extract topic id from memo like 'topic:12345' (case-insensitive)
+    topic_id = None
+    if memo:
+        t = re.search(r'topic\s*[:\-]?\s*(\d+)', memo, re.I)
+        if t:
+            try:
+                topic_id = int(t.group(1))
+            except Exception:
+                topic_id = None
 
     return {
         'tx_hash': tx_hash,
@@ -300,6 +319,7 @@ def extract_fields_from_html(html: str) -> Optional[Dict]:
         'amount_value': amount_value,
         'time': send_time,
         'memo': memo,
+        'topic_id': topic_id,
     }
 
 
